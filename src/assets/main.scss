@@ -1,0 +1,11 @@
+@import "./font.scss";
+@import "../style.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app {
+  margin: 0 auto;
+  height: 100vh;
+}
