@@ -1,6 +1,7 @@
 <template>
   <div class="w-[80%] mx-auto py-4 bg-[#f1f1f1]">
     <div class="flex mb-4 items-center">
+      <!-- fake logo -->
       <img
         src="@/assets/logo/fakestoreapi.png"
         alt="Logo"
