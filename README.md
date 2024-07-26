@@ -1,5 +1,21 @@
-# Vue 3 + TypeScript + Vite
+# neembly-app
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Vue3 TypeScript (Composition API / Pinia) with fakeAPI
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Clone the Repository
+
+To clone this repository, you can use the following methods:
+
+- **HTTPS**: [https://github.com/kennyampss/neembly-app.git](https://github.com/kennyampss/neembly-app.git)
+- **GitHub CLI**: `gh repo clone kennyampss/neembly-app`
+
+## Requirements
+Vite requires Node.js 18+. Upgrade if your package manager prompts.
+
+## Installation
+
+After cloning the repository, navigate to the project directory and run the following command to install dependencies:
+
+```bash
+npm install
+npm run dev
