@@ -4,10 +4,11 @@
       <div class="flex justify-center mb-6">
         <img src="@/assets/logo/neembly.jpg" alt="Logo" class="w-20 h-auto" />
       </div>
+
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
           <input
-            v-model="username"
+            v-model="form.username"
             id="username"
             type="text"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-gray-500"
@@ -17,7 +18,7 @@
         </div>
         <div class="mb-4">
           <input
-            v-model="password"
+            v-model="form.password"
             id="password"
             type="password"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-gray-500"
@@ -48,21 +49,29 @@ import { FwbSpinner } from "flowbite-vue";
 import { useToast } from "vue-toast-notification";
 
 // stores
-import { useAuthStore } from "@/store/auth.ts";
+import { useAuthStore } from "../../store/auth";
+
+// lib
+import Form from "../../lib/Form";
 
 const authStore = useAuthStore();
 const router = useRouter();
 const $toast = useToast();
 
 const isLoading = ref(false);
-const username = ref("");
-const password = ref("");
+
+const form: any = ref(
+  new Form({
+    username: "mor_2314",
+    password: "83r5^_",
+  })
+);
 
 const handleLogin = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
   try {
-    await authStore.login(username.value, password.value);
+    await authStore.login(form.value.username, form.value.password);
     if (authStore.token) {
       $toast.success("Login successfully!", { position: "top-right" });
       router.push("/");
@@ -73,8 +82,8 @@ const handleLogin = async () => {
     $toast.error("Invalid username or password", { position: "top-right" });
   } finally {
     isLoading.value = false;
-    username.value = "";
-    password.value = "";
+    form.value.username = null;
+    form.value.password = null;
   }
 };
 </script>

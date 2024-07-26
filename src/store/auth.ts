@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
-  const token = ref<string | null>(null);
+  const token = ref<string | null>(localStorage.getItem("authToken"));
+  const router = useRouter();
 
   const login = async (username: string, password: string) => {
-    try {
+    try { 
       const response = await axios.post("https://fakestoreapi.com/auth/login", {
         username: username,
         password: password,
@@ -25,6 +27,8 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = () => {
     token.value = null;
     localStorage.removeItem("authToken");
+
+    router.push("/login");
   };
 
   return { token, login, logout };

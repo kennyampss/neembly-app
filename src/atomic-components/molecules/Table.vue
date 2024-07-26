@@ -1,29 +1,46 @@
 <template>
   <div class="relative shadow-md sm:rounded-lg">
     <PerfectScrollbar>
-      <div class="h-[450px]">
-        <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-          >
-            <slot name="header" />
-          </thead>
-          <tbody>
-            <tr
-              v-for="item in paginatedItems"
-              :key="item[identifierField]"
-              class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-            >
-              <slot name="body" :row="item" />
-            </tr>
-          </tbody>
-        </table>
+      <div
+        class="h-[400px]"
+        :class="{ 'flex justify-center': result.length === 0 }"
+      >
+        <div v-if="isLoading">
+          <div v-for="n in 15" :key="n">
+            <TableSkeleton />
+          </div>
+        </div>
+        <div v-else>
+          <template v-if="result.length === 0">
+            <Empty />
+          </template>
+          <template v-else>
+            <fwb-table>
+              <fwb-table-head>
+                <slot name="header" />
+              </fwb-table-head>
+              <fwb-table-body>
+                <!-- @vue-ignore -->
+                <fwb-table-row
+                  v-for="item in paginatedItems"
+                  :key="item[identifierField]"
+                >
+                  <slot name="body" :row="item" />
+                </fwb-table-row>
+              </fwb-table-body>
+            </fwb-table>
+          </template>
+        </div>
       </div>
     </PerfectScrollbar>
 
-    <div class="flex justify-center items-center py-4">
+    <div v-if="isLoading" class="flex justify-center items-center py-4">
+      <FwbSpinner size="5" />
+    </div>
+    <div
+      class="flex justify-center items-center py-4"
+      v-else-if="!isLoading && result.length !== 0"
+    >
       <fwb-button
         size="xs"
         class="rounded hover:bg-gray-300 mr-1"
@@ -34,7 +51,7 @@
       >
         <span class="text-xs">&larr;</span></fwb-button
       >
-
+      <!-- @vue-ignore -->
       <fwb-button
         v-for="page in totalPages"
         :key="page"
@@ -66,11 +83,23 @@
 <script setup lang="ts">
 //npm dependencies
 import { ref, computed, onMounted } from "vue";
-import axios from "axios";
-import { FwbButton } from "flowbite-vue";
+import {
+  FwbButton,
+  FwbTable,
+  FwbTableBody,
+  FwbTableHead,
+  FwbTableRow,
+  FwbSpinner,
+} from "flowbite-vue";
 
 //stores
-import { useProductStore } from "@/store/product.ts";
+import { useProductStore } from "../../store/product";
+
+//atomic components
+import TableSkeleton from "../atoms/TableSkeleton.vue";
+
+//relative components
+import Empty from "../../components/Empty.vue";
 
 const props = defineProps({
   ajaxUrl: {
@@ -103,6 +132,7 @@ const paginatedItems = computed(() => {
 const fetch = async () => {
   isLoading.value = true;
   await productStore.fetchItems(props.ajaxUrl);
+  isLoading.value = false;
 };
 
 const prevPage = () => {
@@ -123,6 +153,10 @@ const gotoPage = (page: number) => {
 
 onMounted(() => {
   fetch();
+});
+
+defineExpose({
+  fetch,
 });
 </script>
 
